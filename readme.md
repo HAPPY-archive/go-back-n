@@ -33,6 +33,3 @@ should_emulate_timeout=True
 
 ### frame损坏概率
 在`receiver.py`第59行，初始化Medium类的构造函数中，设置emulate_wrong_frame_fact为帧损坏的概率，范围为从`0-1`的小数。
-
-## 运行结果
-![result](https://i.imgur.com/mA6KpnV.png)  
