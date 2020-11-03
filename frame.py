@@ -2,7 +2,7 @@ import struct
 
 import binascii
 
-sequence_m = 4
+sequence_m = 5
 
 
 def parse_ack_index(message: bytes) -> int:

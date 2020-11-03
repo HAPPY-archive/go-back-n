@@ -22,13 +22,15 @@ class Medium:
     should_terminate = False
     ack_fail_probably_fact = 0.5
     emulate_wrong_frame_fact = 0
+    max_timeout: int
 
     def __init__(self, as_sender=True, should_emulate_timeout=False, emulate_timeout_fact=0.5,
-                 emulate_wrong_frame_fact=0):
+                 emulate_wrong_frame_fact=0, max_timeout=100):
         self.as_sender = as_sender
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.ack_fail_probably_fact = emulate_timeout_fact
         self.emulate_wrong_frame_fact = emulate_wrong_frame_fact
+        self.max_timeout = max_timeout
         if as_sender:
             self.s.connect((self.host, self.port))
             success(f"connected to {self.host}:{self.port}")
@@ -76,16 +78,17 @@ class Medium:
                 # print("recving ...")
                 # time.sleep(1)
                 data: bytes = self.s.recv(self.fixed_transmitter_size)
+                # TODO
                 _thread.start_new_thread(self.handle_sender, (data,))
                 # print(f"recved data ... {data}")
-                self.handle_sender(data)
+                # self.handle_sender(data)
         except Exception:
             success("see you.")
             os._exit(1)
 
     def timeout_routine(self):
         while True:
-            time.sleep(5)
+            time.sleep(self.max_timeout)
             if self.received:
                 self.received = False
             else:
@@ -126,7 +129,8 @@ class Medium:
         pass
 
     def send_bytes(self, data: bytes):
-        time.sleep(1)
+        # time.sleep(1)
+        time.sleep(0.1)
 
         if random.random() < self.emulate_wrong_frame_fact:
             status("emulate damage frame here.")
